@@ -16,7 +16,7 @@ public class StudentRepository {
         int id=student.getRollNo();
         db.put(id,student);
 
-        return "Student added successfully";
+        return "Added successfully";
     }
 
     public Student getStudent(int rollNo){
