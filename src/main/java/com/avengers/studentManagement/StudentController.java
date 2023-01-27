@@ -1,6 +1,8 @@
 package com.avengers.studentManagement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -61,24 +63,32 @@ public class StudentController{
     StudentService studentService;
 
     @PostMapping("/add_student")
-    public String addStudent(@RequestBody Student student){
-        return studentService.addStudent(student);
+    public ResponseEntity addStudent(@RequestBody Student student){
+        String response=studentService.addStudent(student);
+        return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
     @GetMapping("/get_student")
-    public Student getStudent(@RequestParam("q") int rollNo){
-        return studentService.getStudent(rollNo);
+    public ResponseEntity getStudent(@RequestParam("q") int rollNo){
+        Student student=studentService.getStudent(rollNo);
+        return new ResponseEntity<>(student, HttpStatus.FOUND);
     }
 
     @DeleteMapping("/delete_student")
-    public String deleteStudent(@RequestParam("p") int rollNo){
-        return studentService.deleteStudent(rollNo);
+    public ResponseEntity deleteStudent(@RequestParam("p") int rollNo){
+        String response=studentService.deleteStudent(rollNo);
+        if(response.equals("Invalid rollNo")){
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response,HttpStatus.FOUND);
     }
 
     @PutMapping("/update_student")
-    public String updateStudent(@RequestParam("rollNo") int rollNo,@RequestParam("name") String name){
-        return studentService.updateStudent(rollNo,name);
+    public ResponseEntity updateStudent(@RequestParam("rollNo") int rollNo,@RequestParam("name") String name){
+        String response=studentService.updateStudent(rollNo,name);
+        if(response.equals("Invalid rollNo")){
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response,HttpStatus.FOUND);
     }
-
-
 }
